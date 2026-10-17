@@ -1,7 +1,9 @@
 {
   "status": "done",
-  "summary": "Wrote spec.md for ZF-1: one short Getting Started section plus a TOC entry in README.md, with 9 requirements and 10 acceptance criteria. Open point for the approver: Docker Compose is unverified (no JWT_SECRET in compose, Makefile names docker-compose.yaml), so the spec defaults to leading with the manual path.",
-  "questions": [],
-  "artifacts": [{"path": ".zerovity/out/spec.md", "type": "spec"}],
-  "pathsTouched": [".zerovity/out/spec.md", ".zerovity/out/result.json"]
+  "summary": "Added a 14-line '## Getting Started' section before '## Overview' in README.md plus one TOC entry. Manual path only; Docker Compose is a link to Containerization with no command. Every command shown is already in the README (cp config, openssl rand -base64 32, mvn spring-boot:run, npm install, npm start); none were executed here (docs-only change; no MySQL/MongoDB in the sandbox). Anchors #getting-started, #backend-setup, #frontend-setup, #containerization match existing headings. Diff: README.md only, 14 insertions, no deletions.",
+  "evidence": [
+    {"type": "diff", "command": "git diff --stat HEAD~1 -- README.md", "exitCode": 0, "note": "README.md | 14 insertions, no deletions"},
+    {"type": "check", "command": "grep -n '^## Getting Started' README.md", "exitCode": 0, "note": "Getting Started at l.59, directly before Overview at l.72"}
+  ],
+  "pathsTouched": ["README.md"]
 }
