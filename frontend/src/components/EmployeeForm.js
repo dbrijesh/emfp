@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { addEmployee, getEmployeeById, updateEmployee } from '../services/employeeService';
 import { getAllDepartments } from '../services/departmentService';
-import { TextField, Button, MenuItem, Box, CircularProgress } from '@mui/material';
+import { TextField, Button, MenuItem, Box, CircularProgress, FormControlLabel, Switch } from '@mui/material';
 import { styled } from '@mui/system';
 import { notifySuccess, notifyApiError } from '../utils/toast';
 
@@ -20,6 +20,7 @@ const EmployeeForm = () => {
     email: '',
     age: '',
     department: { id: '' },
+    active: true,
   });
   const [departments, setDepartments] = useState([]);
   const { id } = useParams();
@@ -44,6 +45,7 @@ const EmployeeForm = () => {
               department: {
                 id: employeeData.department ? employeeData.department.id : '',
               },
+              active: employeeData.active !== false,
             });
           }
         }
@@ -111,6 +113,7 @@ const EmployeeForm = () => {
           </MenuItem>
         ))}
       </TextField>
+      <FormControlLabel control={<Switch checked={employee.active} onChange={e => setEmployee({ ...employee, active: e.target.checked })} name="active" color="primary" />} label="Active" />
       <Button type="submit" variant="contained" color="primary" sx={{ marginTop: '1rem' }}>
         Save
       </Button>

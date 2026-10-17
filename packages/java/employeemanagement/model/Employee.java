@@ -51,4 +51,8 @@ public class Employee {
   @Min(value = 18, message = "Age must be at least 18")
   @Max(value = 65, message = "Age must be at most 65")
   private int age;
+
+  /** Whether the employee is active. Existing rows default to active via the column default. */
+  @Column(nullable = false, columnDefinition = "boolean default true")
+  private boolean active = true;
 }

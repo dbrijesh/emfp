@@ -1,0 +1,27 @@
+{
+  "status": "done",
+  "summary": "SHIP handoff for ZF-2 is prepared: PR description, evidence bundle and this result. No code was changed. Frontend suite re-run and passed (26 suites, 45 tests, 17 snapshots). Backend tests (EmployeeStatusApiTest, 12 tests covering AC2 to AC8) have never been compiled or run: mvn was denied to the verifier and no JDK was found. Recommendation is escalate: a person must run `mvn test` in backend/ and confirm the spec O1 reading before merge.",
+  "questions": [],
+  "artifacts": [
+    {"path": ".zerovity/out/pr-description.md", "type": "pr_description"},
+    {"path": ".zerovity/out/evidence-bundle/INDEX.md", "type": "evidence_bundle"},
+    {"path": ".zerovity/out/evidence-bundle/spec.md", "type": "spec_copy"},
+    {"path": ".zerovity/out/evidence-bundle/review.md", "type": "review_copy"},
+    {"path": ".zerovity/out/evidence-bundle/validation.log", "type": "test_log"}
+  ],
+  "evidence": [
+    {"type": "test", "command": "npm test -- --ci (frontend)", "logPath": ".zerovity/out/evidence-bundle/validation.log", "note": "26 suites, 45 tests, 17 snapshots passed. Run during SHIP. Exit code not captured separately; pass/fail taken from the jest summary lines in the log."},
+    {"type": "test", "command": "mvn test (backend)", "note": "NOT RUN. Verifier's mvn -o test was denied by the sandbox. Executor found no JDK or Maven. java is not on PATH in the SHIP shell. EmployeeStatusApiTest is unverified."},
+    {"type": "diff", "command": "diff -rq backend/src/main/java/com/example/employeemanagement packages/java/employeemanagement", "note": "Only difference is HealthController.java, which was already absent from packages/java before this change. AC15 holds for changed files."},
+    {"type": "grep", "command": "count of @Test in EmployeeStatusApiTest.java", "note": "12, matching the executor's count. Tests not executed."}
+  ],
+  "recommendation": "escalate",
+  "findings": [
+    {"severity": "high", "file": "backend/src/test/java/com/example/employeemanagement/EmployeeStatusApiTest.java", "text": "Backend tests have never been compiled or run. AC2 to AC8 are unverified, including the 400 case for a non-boolean active and the 401 case without a token. Run `mvn test` in backend/ before merge."},
+    {"severity": "medium", "file": "docs/specs/ZF-2.md", "text": "Spec O1: CONTEXT.md answered a two-part question with a bare 'Yes'. The spec reads it as yes to both form status control and deactivation confirmation. A person must confirm this reading."},
+    {"severity": "medium", "file": "backend/src/main/java/com/example/employeemanagement/security/SecurityConfig.java", "text": "AC1 (existing rows become active on upgrade) is unproven. Nothing ran against a database created before the change. Spec O4: no migration tool, so this depends on the column default under ddl-auto=update."},
+    {"severity": "low", "file": "frontend/__tests__/EmployeeList.test.js", "text": "AC14 (status does not affect lists, counts or CSV) has one test. Its assertion depth was not reviewed."},
+    {"severity": "low", "file": "backend/src/main/java/com/example/employeemanagement/security/SecurityConfig.java", "text": "Spec O2: only PATCH requires authentication. Other employee endpoints stay open, so the API is inconsistent. This is accepted scope."}
+  ],
+  "pathsTouched": []
+}

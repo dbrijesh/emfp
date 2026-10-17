@@ -501,6 +501,12 @@ exports[`EmployeeList snapshot matches the rendered markup 1`] = `
               class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium  css-3qpjqv-MuiTableCell-root"
               scope="col"
             >
+              Status
+            </th>
+            <th
+              class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium  css-3qpjqv-MuiTableCell-root"
+              scope="col"
+            >
               Contact
             </th>
             <th
@@ -519,7 +525,7 @@ exports[`EmployeeList snapshot matches the rendered markup 1`] = `
           >
             <td
               class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium  css-10ukr6t-MuiTableCell-root"
-              colspan="6"
+              colspan="7"
             >
               <div
                 class="MuiBox-root css-1pg69xh"
@@ -551,7 +557,7 @@ exports[`EmployeeList snapshot matches the rendered markup 1`] = `
         />
         <p
           class="MuiTablePagination-selectLabel  css-pdct74-MuiTablePagination-selectLabel"
-          id=":r5:"
+          id=":r6:"
         >
           Rows per page:
         </p>
@@ -559,12 +565,12 @@ exports[`EmployeeList snapshot matches the rendered markup 1`] = `
           class="MuiInputBase-root MuiInputBase-colorPrimary  MuiTablePagination-input  css-16c50h-MuiInputBase-root-MuiTablePagination-select"
         >
           <div
-            aria-controls=":r6:"
+            aria-controls=":r7:"
             aria-expanded="false"
             aria-haspopup="listbox"
-            aria-labelledby=":r5: :r4:"
+            aria-labelledby=":r6: :r5:"
             class="MuiSelect-select MuiTablePagination-select  MuiSelect-standard  MuiInputBase-input  css-141c2s2-MuiSelect-select-MuiInputBase-input"
-            id=":r4:"
+            id=":r5:"
             role="combobox"
             tabindex="0"
           >

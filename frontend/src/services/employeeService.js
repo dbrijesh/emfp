@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getToken } from './authService';
 
 const API_URL = 'https://employee-management-app-gdm5.onrender.com/api/employees';
 
@@ -23,6 +24,13 @@ export const addEmployee = async employee => {
 // Update an existing employee
 export const updateEmployee = async (id, employee) => {
   const response = await axios.put(`${API_URL}/${id}`, employee);
+  return response.data;
+};
+
+// Set an employee's active/inactive status (requires an authenticated user)
+export const updateEmployeeStatus = async (id, active) => {
+  const token = getToken();
+  const response = await axios.patch(`${API_URL}/${id}/status`, { active }, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
   return response.data;
 };
 

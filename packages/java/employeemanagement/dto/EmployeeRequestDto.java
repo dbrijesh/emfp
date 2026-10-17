@@ -42,6 +42,9 @@ public class EmployeeRequestDto {
   @NotNull(message = "Department is required")
   private DepartmentRef department;
 
+  /** Whether the employee is active. Optional; when omitted the stored/default status is used. */
+  private Boolean active;
+
   /**
    * Nested DTO representing a reference to an existing department by its ID.
    *
