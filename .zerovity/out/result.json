@@ -1,0 +1,6 @@
+{
+  "status": "done",
+  "summary": "Spec written for ZF-2. Key findings: all employee endpoints are currently permitAll, so the PATCH needs a SecurityConfig matcher to be authenticated-only; the new column needs a DB default of true or ddl-auto=update will mark existing rows inactive; frontend auth header wiring must be verified. One interpretation flagged for approver (O1).",
+  "artifacts": [{"path": ".zerovity/out/spec.md", "type": "spec"}],
+  "pathsTouched": [".zerovity/out/spec.md"]
+}
