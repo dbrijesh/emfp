@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getAllEmployees, deleteEmployee } from '../services/employeeService';
+import { getAllEmployees, deleteEmployee, updateEmployeeStatus } from '../services/employeeService';
 import { getAllDepartments } from '../services/departmentService';
 import {
   Table,
@@ -29,6 +29,11 @@ import {
   Switch,
   FormControlLabel,
   Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EmailIcon from '@mui/icons-material/Email';
@@ -51,6 +56,8 @@ const EmployeeList = () => {
   const [ageFilter, setAgeFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [denseRows, setDenseRows] = useState(false);
+  const [statusUpdatingId, setStatusUpdatingId] = useState(null);
+  const [deactivateTarget, setDeactivateTarget] = useState(null);
 
   useEffect(() => {
     if (!isLoggedIn) setShowSnackbar(true);
@@ -87,6 +94,33 @@ const EmployeeList = () => {
       notifyApiError(error, 'We could not delete this employee. Please try again.');
     }
     setDeletingEmployeeId(null);
+  };
+
+  const applyStatus = async (employee, active) => {
+    setStatusUpdatingId(employee.id);
+    try {
+      const updated = await updateEmployeeStatus(employee.id, active);
+      const newActive = typeof updated?.active === 'boolean' ? updated.active : active;
+      setEmployees(prevEmployees => prevEmployees.map(e => (e.id === employee.id ? { ...e, active: newActive } : e)));
+    } catch (error) {
+      console.error('Error updating employee status:', error);
+      notifyApiError(error, "We could not update this employee's status. Please try again.");
+    }
+    setStatusUpdatingId(null);
+  };
+
+  const handleStatusToggle = employee => {
+    if (employee.active) {
+      setDeactivateTarget(employee);
+    } else {
+      applyStatus(employee, true);
+    }
+  };
+
+  const handleConfirmDeactivate = () => {
+    const target = deactivateTarget;
+    setDeactivateTarget(null);
+    if (target) applyStatus(target, false);
   };
 
   const handleSearchChange = event => {
@@ -412,6 +446,7 @@ const EmployeeList = () => {
               <TableCell sx={{ fontWeight: 700, letterSpacing: 0.2 }}>Email</TableCell>
               <TableCell sx={{ fontWeight: 700, letterSpacing: 0.2 }}>Department</TableCell>
               <TableCell sx={{ fontWeight: 700, letterSpacing: 0.2 }}>Age</TableCell>
+              <TableCell sx={{ fontWeight: 700, letterSpacing: 0.2 }}>Status</TableCell>
               <TableCell sx={{ fontWeight: 700, letterSpacing: 0.2 }}>Contact</TableCell>
               <TableCell align="right" sx={{ fontWeight: 700, letterSpacing: 0.2 }}>
                 Actions
@@ -459,6 +494,15 @@ const EmployeeList = () => {
                   <TableCell>{employee.email}</TableCell>
                   <TableCell>{employee.department?.name || 'Unassigned'}</TableCell>
                   <TableCell>{employee.age}</TableCell>
+                  <TableCell>
+                    <Switch
+                      checked={!!employee.active}
+                      onChange={() => handleStatusToggle(employee)}
+                      disabled={statusUpdatingId === employee.id}
+                      color="primary"
+                      inputProps={{ 'aria-label': `Status for ${employee.firstName} ${employee.lastName}` }}
+                    />
+                  </TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
                       <Tooltip title="Email">
@@ -512,7 +556,7 @@ const EmployeeList = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6}>
+                <TableCell colSpan={7}>
                   <Box sx={{ textAlign: 'center', padding: '1.5rem' }}>
                     <Typography variant="subtitle1">No employees match your filters.</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -525,6 +569,18 @@ const EmployeeList = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog open={!!deactivateTarget} onClose={() => setDeactivateTarget(null)}>
+        <DialogTitle>Deactivate employee?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{deactivateTarget ? `${deactivateTarget.firstName} ${deactivateTarget.lastName}` : 'This employee'} will be marked as inactive.</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeactivateTarget(null)}>Cancel</Button>
+          <Button onClick={handleConfirmDeactivate} color="primary" variant="contained">
+            Deactivate
+          </Button>
+        </DialogActions>
+      </Dialog>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
