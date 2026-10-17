@@ -1,10 +1,7 @@
 {
   "status": "done",
-  "summary": "Repo is now populated. README.md has no Getting Started section; commands exist in Makefile, package.json and docker-compose.yml. Complexity S, risk low, but some commands look broken (compose has no JWT_SECRET, Makefile points at docker-compose.yaml, config.properties is only an example file) and must be verified before being documented.",
-  "artifacts": [{"path": ".zerovity/out/triage.md", "type": "triage"}],
-  "evidence": [
-    {"type": "file-read", "note": "README.md, Makefile, package.json, docker-compose.yml, backend/pom.xml, Dockerfiles; no commands executed"}
-  ],
-  "triage": {"complexity": "S", "risk": "low", "skipSpec": false},
-  "pathsTouched": ["README.md"]
+  "summary": "Wrote spec.md for ZF-1: one short Getting Started section plus a TOC entry in README.md, with 9 requirements and 10 acceptance criteria. Open point for the approver: Docker Compose is unverified (no JWT_SECRET in compose, Makefile names docker-compose.yaml), so the spec defaults to leading with the manual path.",
+  "questions": [],
+  "artifacts": [{"path": ".zerovity/out/spec.md", "type": "spec"}],
+  "pathsTouched": [".zerovity/out/spec.md", ".zerovity/out/result.json"]
 }
