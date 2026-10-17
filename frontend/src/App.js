@@ -1,0 +1,163 @@
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Container, CssBaseline, ThemeProvider } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import theme from './theme';
+import Dashboard from './components/Dashboard';
+import EmployeeList from './components/EmployeeList';
+import EmployeeForm from './components/EmployeeForm';
+import DepartmentList from './components/DepartmentList';
+import DepartmentForm from './components/DepartmentForm';
+import Navbar from './components/Navbar';
+import LandingPage from './components/LandingPage';
+import Profile from './components/Profile';
+import Passkeys from './components/Passkeys';
+import Footer from './components/Footer';
+import Login from './components/Login';
+import Register from './components/Register';
+import ResetPassword from './components/ResetPassword';
+import VerifyUsername from './components/VerifyUsername';
+import NotFoundPage from './components/NotFoundPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import QuickActions from './components/QuickActions';
+import { warmUpBackend } from './utils/warmup';
+
+const AppContent = () => {
+  const location = useLocation();
+  const isLanding = location.pathname === '/';
+
+  // Always start a freshly navigated page at the top instead of inheriting
+  // the previous page's scroll position (the browser's default behavior).
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname]);
+
+  return (
+    <>
+      {!isLanding && <Navbar />}
+      <Container
+        maxWidth={isLanding ? false : 'lg'}
+        disableGutters={isLanding}
+        sx={{
+          mt: isLanding ? 0 : { xs: 2, md: 4 },
+          mb: isLanding ? 0 : { xs: 3, md: 4 },
+          px: isLanding ? 0 : { xs: 2, sm: 3 },
+        }}
+      >
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/employees"
+            element={
+              <ProtectedRoute>
+                <EmployeeList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-employee"
+            element={
+              <ProtectedRoute>
+                <EmployeeForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-employee/:id"
+            element={
+              <ProtectedRoute>
+                <EmployeeForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/departments"
+            element={
+              <ProtectedRoute>
+                <DepartmentList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-department"
+            element={
+              <ProtectedRoute>
+                <DepartmentForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-department/:id"
+            element={
+              <ProtectedRoute>
+                <DepartmentForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/verify-username" element={<VerifyUsername />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/passkeys"
+            element={
+              <ProtectedRoute>
+                <Passkeys />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Container>
+      <QuickActions />
+      <Footer />
+    </>
+  );
+};
+
+const App = () => {
+  // Wake the (free-tier) backend as soon as the app loads so its cold start happens while the user
+  // is still on the landing page, not when they make their first real request.
+  useEffect(() => {
+    warmUpBackend();
+  }, []);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <AppContent />
+      </Router>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={4500}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        style={{ zIndex: 20000 }}
+      />
+    </ThemeProvider>
+  );
+};
+
+export default App;
