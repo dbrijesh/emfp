@@ -12,6 +12,7 @@ Designed with scalability and maintainability in mind, this application is also 
 
 ## Table of Contents
 
+- [Getting Started](#getting-started)
 - [Overview](#overview)
 - [Architecture at a Glance](#architecture-at-a-glance)
   - [System Context](#system-context)
@@ -54,6 +55,19 @@ Designed with scalability and maintainability in mind, this application is also 
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
+
+## Getting Started
+
+Run the app locally (manual path). Prerequisites: Java 11, Maven, Node.js and npm (the frontend Docker image uses Node 18), MySQL and MongoDB running locally.
+
+1. Clone the repository and open it.
+2. Configure the backend: `cp backend/example_config.properties backend/config.properties`, then fill in the `MYSQL_*` and `MONGO_URI` values and add a `JWT_SECRET` (for example from `openssl rand -base64 32`).
+3. Make sure the MySQL database named in `MYSQL_DB` exists.
+4. Start the backend: `cd backend && mvn spring-boot:run` (serves http://localhost:8080).
+5. Start the frontend in a second terminal: `cd frontend && npm install && npm start` (serves http://localhost:3000).
+6. Check it works: open http://localhost:8080/swagger-ui.html for the API docs and http://localhost:3000 for the app.
+
+More detail: [Backend Setup](#backend-setup), [Frontend Setup](#frontend-setup), and [Containerization](#containerization) for Docker.
 
 ## Overview
 

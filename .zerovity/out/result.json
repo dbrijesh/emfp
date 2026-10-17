@@ -1,0 +1,32 @@
+{
+  "status": "done",
+  "summary": "SHIP handoff for ZF-1 is ready for a person. README.md change is 14 lines: a Getting Started section before Overview and one TOC entry. Verification was by reading and grep only; the end-to-end run (AC4-AC6) was not performed because MySQL and MongoDB are not available here. Two things a reviewer must decide: (1) R8 is not met because the cp command in step 2 is not in the README and was not run (the executor and verifier both said it was); (2) the branch also contains docs/specs/ZF-1.md and .zerovity/out pipeline files, which R9/AC9 does not allow. The verifier's three low findings (clone command, config values, database creation) are still open. Recommendation is revise, not accept, until (1) is fixed or accepted.",
+  "recommendation": "revise",
+  "findings": [
+    {"severity": "medium", "file": "README.md", "line": 64, "text": "R8 not met: the cp command for backend/config.properties is not stated in the README and was not run. The executor and verifier evidence wrongly said every command was already in the README."},
+    {"severity": "low", "file": "README.md", "line": 61, "text": "Step 1 'Clone the repository and open it' has no command (verifier finding, open)."},
+    {"severity": "low", "file": "README.md", "line": 63, "text": "Step 2 names MYSQL_* and MONGO_URI but gives no values (verifier finding, open)."},
+    {"severity": "low", "file": "README.md", "line": 64, "text": "Step 3 says to create the database but gives no command (verifier finding, open)."},
+    {"severity": "low", "file": ".zerovity/out/result.json", "text": "R9/AC9 scope: branch diff vs main also includes docs/specs/ZF-1.md and .zerovity/out pipeline files. Only README.md is product change."}
+  ],
+  "artifacts": [
+    {"path": ".zerovity/out/pr-description.md", "type": "pr_description"},
+    {"path": ".zerovity/out/evidence-bundle/INDEX.md", "type": "evidence_bundle"},
+    {"path": ".zerovity/out/evidence-bundle/spec.md", "type": "spec_copy"},
+    {"path": ".zerovity/out/evidence-bundle/review.md", "type": "review_copy"}
+  ],
+  "evidence": [
+    {"type": "diff-stat", "command": "git diff --stat main -- README.md", "exitCode": 0, "note": "README.md 14 insertions, no deletions"},
+    {"type": "diff-stat", "command": "git diff --stat main", "exitCode": 0, "note": "4 files changed: README.md plus docs/specs/ZF-1.md and two .zerovity/out files; R9 scope issue"},
+    {"type": "check", "command": "grep -n ^## README.md", "exitCode": 0, "note": "Getting Started l.59 directly before Overview l.72"},
+    {"type": "check", "command": "grep -n config.properties README.md", "exitCode": 0, "note": "cp command appears only at l.64 (new section); config file names at l.391, l.481"},
+    {"type": "not-run", "note": "Build, test, backend and frontend start, Swagger UI and clean-clone config steps were not run. No MySQL or MongoDB here."}
+  ],
+  "pathsTouched": [
+    ".zerovity/out/pr-description.md",
+    ".zerovity/out/evidence-bundle/INDEX.md",
+    ".zerovity/out/evidence-bundle/spec.md",
+    ".zerovity/out/evidence-bundle/review.md",
+    ".zerovity/out/result.json"
+  ]
+}
