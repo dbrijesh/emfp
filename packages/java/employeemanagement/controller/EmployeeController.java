@@ -2,6 +2,7 @@ package com.example.employeemanagement.controller;
 
 import com.example.employeemanagement.dto.EmployeeRequestDto;
 import com.example.employeemanagement.dto.EmployeeResponseDto;
+import com.example.employeemanagement.dto.EmployeeStatusRequestDto;
 import com.example.employeemanagement.exception.ResourceNotFoundException;
 import com.example.employeemanagement.model.Department;
 import com.example.employeemanagement.model.Employee;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -128,6 +130,40 @@ public class EmployeeController {
     employee.setEmail(request.getEmail());
     employee.setDepartment(department);
     employee.setAge(request.getAge());
+    if (request.getActive() != null) {
+      employee.setActive(request.getActive());
+    }
+
+    Employee updatedEmployee = employeeService.saveEmployee(employee);
+    return ResponseEntity.ok(convertToDto(updatedEmployee));
+  }
+
+  /**
+   * Update an employee's active/inactive status API.
+   *
+   * @param id ID of the employee whose status is to be changed
+   * @param request New status
+   * @return Updated employee record
+   */
+  @Operation(
+      summary = "Update employee status",
+      description = "Set an employee's status to active or inactive without changing other fields")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Employee status updated"),
+        @ApiResponse(responseCode = "400", description = "Invalid request body"),
+        @ApiResponse(responseCode = "401", description = "Authentication required"),
+        @ApiResponse(responseCode = "404", description = "Employee not found")
+      })
+  @PatchMapping("/{id}/status")
+  public ResponseEntity<EmployeeResponseDto> updateEmployeeStatus(
+      @PathVariable Long id, @Valid @RequestBody EmployeeStatusRequestDto request) {
+    Employee employee =
+        employeeService
+            .getEmployeeById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + id));
+
+    employee.setActive(request.getActive());
 
     Employee updatedEmployee = employeeService.saveEmployee(employee);
     return ResponseEntity.ok(convertToDto(updatedEmployee));
@@ -168,6 +204,7 @@ public class EmployeeController {
     dto.setLastName(employee.getLastName());
     dto.setEmail(employee.getEmail());
     dto.setAge(employee.getAge());
+    dto.setActive(employee.isActive());
     if (employee.getDepartment() != null) {
       EmployeeResponseDto.DepartmentDto deptDto = new EmployeeResponseDto.DepartmentDto();
       deptDto.setId(employee.getDepartment().getId());
@@ -192,6 +229,9 @@ public class EmployeeController {
     employee.setLastName(request.getLastName());
     employee.setEmail(request.getEmail());
     employee.setAge(request.getAge());
+    if (request.getActive() != null) {
+      employee.setActive(request.getActive());
+    }
 
     Department department =
         departmentService

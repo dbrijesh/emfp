@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Maps to: com.example.employeemanagement.model.Employee
 -- JPA relationship: ManyToOne → Department (FetchType.EAGER)
 -- Validation: age 18–65, email format, firstName/lastName not blank
+-- Existing databases: ALTER TABLE employees ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE;
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS employees (
   id            BIGINT       NOT NULL AUTO_INCREMENT,
@@ -55,6 +56,7 @@ CREATE TABLE IF NOT EXISTS employees (
   email         VARCHAR(255) NOT NULL,
   age           INT          NOT NULL,
   department_id BIGINT       NOT NULL,
+  active        BOOLEAN      NOT NULL DEFAULT TRUE,
   PRIMARY KEY (id),
   CONSTRAINT fk_employees_department
     FOREIGN KEY (department_id) REFERENCES departments (id)

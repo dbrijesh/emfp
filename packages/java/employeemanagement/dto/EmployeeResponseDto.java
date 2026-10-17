@@ -31,6 +31,9 @@ public class EmployeeResponseDto {
   /** The department the employee belongs to. */
   private DepartmentDto department;
 
+  /** Whether the employee is active. */
+  private boolean active;
+
   /**
    * Nested DTO representing department information within an employee response.
    *

@@ -104,6 +104,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authenticated()
         .antMatchers(HttpMethod.DELETE, "/api/passkeys/**")
         .authenticated()
+        .antMatchers(HttpMethod.PATCH, "/api/employees/*/status")
+        .authenticated()
         .anyRequest()
         .permitAll()
         .and()
